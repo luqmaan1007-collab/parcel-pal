@@ -35,7 +35,7 @@ export async function fetchAndStore(packageId: string) {
 
   const { data: updated } = await supabaseAdmin
     .from("tracked_packages")
-    .update(update)
+    .update(update as any)
     .eq("id", packageId)
     .select("*")
     .single();
