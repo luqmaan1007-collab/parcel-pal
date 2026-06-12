@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PackageIdRouteImport } from './routes/package.$id'
+import { Route as ApiPublicCronRefreshPackagesRouteImport } from './routes/api/public/cron/refresh-packages'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,31 +23,41 @@ const PackageIdRoute = PackageIdRouteImport.update({
   path: '/package/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicCronRefreshPackagesRoute =
+  ApiPublicCronRefreshPackagesRouteImport.update({
+    id: '/api/public/cron/refresh-packages',
+    path: '/api/public/cron/refresh-packages',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/package/$id': typeof PackageIdRoute
+  '/api/public/cron/refresh-packages': typeof ApiPublicCronRefreshPackagesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/package/$id': typeof PackageIdRoute
+  '/api/public/cron/refresh-packages': typeof ApiPublicCronRefreshPackagesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/package/$id': typeof PackageIdRoute
+  '/api/public/cron/refresh-packages': typeof ApiPublicCronRefreshPackagesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/package/$id'
+  fullPaths: '/' | '/package/$id' | '/api/public/cron/refresh-packages'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/package/$id'
-  id: '__root__' | '/' | '/package/$id'
+  to: '/' | '/package/$id' | '/api/public/cron/refresh-packages'
+  id: '__root__' | '/' | '/package/$id' | '/api/public/cron/refresh-packages'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   PackageIdRoute: typeof PackageIdRoute
+  ApiPublicCronRefreshPackagesRoute: typeof ApiPublicCronRefreshPackagesRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,13 +76,31 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PackageIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/cron/refresh-packages': {
+      id: '/api/public/cron/refresh-packages'
+      path: '/api/public/cron/refresh-packages'
+      fullPath: '/api/public/cron/refresh-packages'
+      preLoaderRoute: typeof ApiPublicCronRefreshPackagesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   PackageIdRoute: PackageIdRoute,
+  ApiPublicCronRefreshPackagesRoute: ApiPublicCronRefreshPackagesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
