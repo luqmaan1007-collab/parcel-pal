@@ -14,7 +14,123 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      push_subscriptions: {
+        Row: {
+          auth: string
+          created_at: string
+          endpoint: string
+          id: string
+          p256dh: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          auth: string
+          created_at?: string
+          endpoint: string
+          id?: string
+          p256dh: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          auth?: string
+          created_at?: string
+          endpoint?: string
+          id?: string
+          p256dh?: string
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      tracked_packages: {
+        Row: {
+          carrier: Database["public"]["Enums"]["carrier"]
+          created_at: string
+          events: Json
+          id: string
+          last_event_at: string | null
+          last_event_description: string | null
+          last_refreshed_at: string | null
+          locker_address: string | null
+          locker_location: string | null
+          locker_number: string | null
+          nickname: string | null
+          notified_ready: boolean
+          picked_up_at: string | null
+          pickup_code: string | null
+          sender: string | null
+          status: Database["public"]["Enums"]["pkg_status"]
+          tracking_number: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          carrier: Database["public"]["Enums"]["carrier"]
+          created_at?: string
+          events?: Json
+          id?: string
+          last_event_at?: string | null
+          last_event_description?: string | null
+          last_refreshed_at?: string | null
+          locker_address?: string | null
+          locker_location?: string | null
+          locker_number?: string | null
+          nickname?: string | null
+          notified_ready?: boolean
+          picked_up_at?: string | null
+          pickup_code?: string | null
+          sender?: string | null
+          status?: Database["public"]["Enums"]["pkg_status"]
+          tracking_number: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          carrier?: Database["public"]["Enums"]["carrier"]
+          created_at?: string
+          events?: Json
+          id?: string
+          last_event_at?: string | null
+          last_event_description?: string | null
+          last_refreshed_at?: string | null
+          locker_address?: string | null
+          locker_location?: string | null
+          locker_number?: string | null
+          nickname?: string | null
+          notified_ready?: boolean
+          picked_up_at?: string | null
+          pickup_code?: string | null
+          sender?: string | null
+          status?: Database["public"]["Enums"]["pkg_status"]
+          tracking_number?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +139,13 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      carrier: "bring" | "postnord"
+      pkg_status:
+        | "unknown"
+        | "in_transit"
+        | "out_for_delivery"
+        | "ready"
+        | "delivered"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +272,15 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      carrier: ["bring", "postnord"],
+      pkg_status: [
+        "unknown",
+        "in_transit",
+        "out_for_delivery",
+        "ready",
+        "delivered",
+      ],
+    },
   },
 } as const
