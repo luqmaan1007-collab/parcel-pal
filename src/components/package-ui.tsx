@@ -1,10 +1,29 @@
 import { Link } from "@tanstack/react-router";
 import { useLang } from "@/lib/lang-context";
-import { Package as PackageIcon, MapPin, Clock, ChevronRight, Bell } from "lucide-react";
-import { mockPackages, type Package, type PackageStatus } from "@/lib/packages";
+import { Package as PackageIcon, MapPin, ChevronRight, Bell } from "lucide-react";
 import type { TKey } from "@/lib/i18n";
 
+type PackageStatus = "unknown" | "in_transit" | "out_for_delivery" | "ready" | "delivered";
+
+export interface PackageRow {
+  id: string;
+  carrier: "bring" | "postnord";
+  tracking_number: string;
+  nickname: string | null;
+  sender: string | null;
+  status: PackageStatus;
+  locker_location: string | null;
+  locker_number: string | null;
+  locker_address: string | null;
+  pickup_code: string | null;
+  last_event_at: string | null;
+  last_event_description: string | null;
+  events: any;
+  picked_up_at: string | null;
+}
+
 const statusKey: Record<PackageStatus, TKey> = {
+  unknown: "unknown",
   in_transit: "inTransit",
   out_for_delivery: "outForDelivery",
   ready: "ready",
@@ -12,6 +31,7 @@ const statusKey: Record<PackageStatus, TKey> = {
 };
 
 const statusColor: Record<PackageStatus, string> = {
+  unknown: "bg-muted text-muted-foreground",
   in_transit: "bg-muted text-muted-foreground",
   out_for_delivery: "bg-warning/15 text-warning-foreground border border-warning/30",
   ready: "bg-success/15 text-success border border-success/30",
@@ -22,24 +42,15 @@ export function LangSwitch() {
   const { lang, setLang } = useLang();
   return (
     <div className="inline-flex rounded-full bg-white/15 backdrop-blur p-1 text-xs font-medium">
-      <button
-        onClick={() => setLang("sv")}
-        className={`px-3 py-1 rounded-full transition-all ${lang === "sv" ? "bg-white text-primary" : "text-white/80"}`}
-      >
-        SV
-      </button>
-      <button
-        onClick={() => setLang("en")}
-        className={`px-3 py-1 rounded-full transition-all ${lang === "en" ? "bg-white text-primary" : "text-white/80"}`}
-      >
-        EN
-      </button>
+      <button onClick={() => setLang("sv")} className={`px-3 py-1 rounded-full transition-all ${lang === "sv" ? "bg-white text-primary" : "text-white/80"}`}>SV</button>
+      <button onClick={() => setLang("en")} className={`px-3 py-1 rounded-full transition-all ${lang === "en" ? "bg-white text-primary" : "text-white/80"}`}>EN</button>
     </div>
   );
 }
 
-export function PackageCard({ pkg }: { pkg: Package }) {
+export function PackageCard({ pkg }: { pkg: PackageRow }) {
   const { t } = useLang();
+  const carrierLabel = pkg.carrier === "bring" ? "Bring" : "PostNord";
   return (
     <Link
       to="/package/$id"
@@ -52,8 +63,10 @@ export function PackageCard({ pkg }: { pkg: Package }) {
             <PackageIcon className="size-6 text-primary" />
           </div>
           <div className="min-w-0">
-            <div className="font-semibold truncate">{pkg.sender}</div>
-            <div className="text-xs text-muted-foreground font-mono mt-0.5 truncate">{pkg.trackingNumber}</div>
+            <div className="font-semibold truncate">{pkg.nickname || pkg.sender || carrierLabel}</div>
+            <div className="text-xs text-muted-foreground font-mono mt-0.5 truncate">
+              {carrierLabel} · {pkg.tracking_number}
+            </div>
           </div>
         </div>
         <ChevronRight className="size-5 text-muted-foreground shrink-0 mt-2" />
@@ -64,16 +77,12 @@ export function PackageCard({ pkg }: { pkg: Package }) {
         {t(statusKey[pkg.status])}
       </div>
 
-      <div className="mt-4 flex items-center gap-4 text-xs text-muted-foreground">
-        <div className="flex items-center gap-1.5 min-w-0">
+      {pkg.locker_location && (
+        <div className="mt-4 flex items-center gap-1.5 text-xs text-muted-foreground min-w-0">
           <MapPin className="size-3.5 shrink-0" />
-          <span className="truncate">{pkg.lockerLocation}</span>
+          <span className="truncate">{pkg.locker_location}</span>
         </div>
-        <div className="flex items-center gap-1.5 shrink-0">
-          <Clock className="size-3.5" />
-          <span>{pkg.eta === "today" ? t("today") : t("tomorrow")}</span>
-        </div>
-      </div>
+      )}
     </Link>
   );
 }
@@ -88,5 +97,5 @@ export function PhoneFrame({ children }: { children: React.ReactNode }) {
   );
 }
 
-export { mockPackages };
 export { Bell };
+export { statusKey };
