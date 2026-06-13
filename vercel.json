@@ -1,0 +1,9 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": ".output/public",
+  "framework": "vite",
+  "serverlessFunctionRegion": "iad1",
+  "env": {
+    "NODE_ENV": "production"
+  }
+}
