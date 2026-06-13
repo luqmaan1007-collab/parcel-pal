@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      api_keys: {
+        Row: {
+          created_at: string
+          id: string
+          key_hash: string
+          key_prefix: string
+          last_used_at: string | null
+          name: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          key_hash: string
+          key_prefix: string
+          last_used_at?: string | null
+          name: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          key_hash?: string
+          key_prefix?: string
+          last_used_at?: string | null
+          name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -79,10 +109,14 @@ export type Database = {
           locker_number: string | null
           nickname: string | null
           notified_ready: boolean
+          order_reference: string | null
           picked_up_at: string | null
           pickup_code: string | null
           sender: string | null
+          source: string
+          source_api_key_id: string | null
           status: Database["public"]["Enums"]["pkg_status"]
+          store_name: string | null
           tracking_number: string
           updated_at: string
           user_id: string
@@ -100,10 +134,14 @@ export type Database = {
           locker_number?: string | null
           nickname?: string | null
           notified_ready?: boolean
+          order_reference?: string | null
           picked_up_at?: string | null
           pickup_code?: string | null
           sender?: string | null
+          source?: string
+          source_api_key_id?: string | null
           status?: Database["public"]["Enums"]["pkg_status"]
+          store_name?: string | null
           tracking_number: string
           updated_at?: string
           user_id: string
@@ -121,15 +159,27 @@ export type Database = {
           locker_number?: string | null
           nickname?: string | null
           notified_ready?: boolean
+          order_reference?: string | null
           picked_up_at?: string | null
           pickup_code?: string | null
           sender?: string | null
+          source?: string
+          source_api_key_id?: string | null
           status?: Database["public"]["Enums"]["pkg_status"]
+          store_name?: string | null
           tracking_number?: string
           updated_at?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "tracked_packages_source_api_key_id_fkey"
+            columns: ["source_api_key_id"]
+            isOneToOne: false
+            referencedRelation: "api_keys"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
@@ -139,7 +189,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      carrier: "bring" | "postnord"
+      carrier: "bring" | "postnord" | "ingested"
       pkg_status:
         | "unknown"
         | "in_transit"
@@ -273,7 +323,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      carrier: ["bring", "postnord"],
+      carrier: ["bring", "postnord", "ingested"],
       pkg_status: [
         "unknown",
         "in_transit",
