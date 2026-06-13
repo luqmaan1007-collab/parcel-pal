@@ -1,16 +1,15 @@
 {
   "version": 2,
-  "framework": "vite",
-  "routes": [
+  "builds": [
     {
-      "src": "/assets/(.*)",
-      "dest": "/assets/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "src": "package.json",
+      "use": "@vercel/next"
     }
   ],
-  "cleanUrls": true
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/"
+    }
+  ]
 }
-
