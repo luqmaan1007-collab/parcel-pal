@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { useLang } from "@/lib/lang-context";
 import { LangSwitch, PhoneFrame } from "@/components/package-ui";
-import { Package as PackageIcon } from "lucide-react";
+import paketlyLogo from "@/assets/paketly-logo.png";
 
 export const Route = createFileRoute("/auth")({
   ssr: false,
@@ -74,9 +74,7 @@ function AuthPage() {
       <div className="px-6 pt-10 pb-8 text-primary-foreground" style={{ background: "var(--gradient-hero)" }}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="size-10 rounded-2xl bg-white/15 backdrop-blur grid place-items-center">
-              <PackageIcon className="size-5" />
-            </div>
+            <img src={paketlyLogo} alt="Paketly" width={40} height={40} className="size-10 rounded-2xl bg-white/15 backdrop-blur p-1" />
             <div className="font-bold text-lg">Paketly</div>
           </div>
           <LangSwitch />

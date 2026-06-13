@@ -12,7 +12,9 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedDeveloperRouteImport } from './routes/_authenticated/developer'
 import { Route as AuthenticatedPackageIdRouteImport } from './routes/_authenticated/package.$id'
+import { Route as ApiPublicV1PackagesRouteImport } from './routes/api/public/v1/packages'
 import { Route as ApiPublicCronRefreshPackagesRouteImport } from './routes/api/public/cron/refresh-packages'
 
 const AuthRoute = AuthRouteImport.update({
@@ -29,10 +31,20 @@ const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedDeveloperRoute = AuthenticatedDeveloperRouteImport.update({
+  id: '/developer',
+  path: '/developer',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedPackageIdRoute = AuthenticatedPackageIdRouteImport.update({
   id: '/package/$id',
   path: '/package/$id',
   getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const ApiPublicV1PackagesRoute = ApiPublicV1PackagesRouteImport.update({
+  id: '/api/public/v1/packages',
+  path: '/api/public/v1/packages',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicCronRefreshPackagesRoute =
   ApiPublicCronRefreshPackagesRouteImport.update({
@@ -44,45 +56,62 @@ const ApiPublicCronRefreshPackagesRoute =
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/auth': typeof AuthRoute
+  '/developer': typeof AuthenticatedDeveloperRoute
   '/package/$id': typeof AuthenticatedPackageIdRoute
   '/api/public/cron/refresh-packages': typeof ApiPublicCronRefreshPackagesRoute
+  '/api/public/v1/packages': typeof ApiPublicV1PackagesRoute
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
+  '/developer': typeof AuthenticatedDeveloperRoute
   '/': typeof AuthenticatedIndexRoute
   '/package/$id': typeof AuthenticatedPackageIdRoute
   '/api/public/cron/refresh-packages': typeof ApiPublicCronRefreshPackagesRoute
+  '/api/public/v1/packages': typeof ApiPublicV1PackagesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_authenticated/developer': typeof AuthenticatedDeveloperRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/package/$id': typeof AuthenticatedPackageIdRoute
   '/api/public/cron/refresh-packages': typeof ApiPublicCronRefreshPackagesRoute
+  '/api/public/v1/packages': typeof ApiPublicV1PackagesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/auth'
+    | '/developer'
     | '/package/$id'
     | '/api/public/cron/refresh-packages'
+    | '/api/public/v1/packages'
   fileRoutesByTo: FileRoutesByTo
-  to: '/auth' | '/' | '/package/$id' | '/api/public/cron/refresh-packages'
+  to:
+    | '/auth'
+    | '/developer'
+    | '/'
+    | '/package/$id'
+    | '/api/public/cron/refresh-packages'
+    | '/api/public/v1/packages'
   id:
     | '__root__'
     | '/_authenticated'
     | '/auth'
+    | '/_authenticated/developer'
     | '/_authenticated/'
     | '/_authenticated/package/$id'
     | '/api/public/cron/refresh-packages'
+    | '/api/public/v1/packages'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   ApiPublicCronRefreshPackagesRoute: typeof ApiPublicCronRefreshPackagesRoute
+  ApiPublicV1PackagesRoute: typeof ApiPublicV1PackagesRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -108,12 +137,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/developer': {
+      id: '/_authenticated/developer'
+      path: '/developer'
+      fullPath: '/developer'
+      preLoaderRoute: typeof AuthenticatedDeveloperRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/package/$id': {
       id: '/_authenticated/package/$id'
       path: '/package/$id'
       fullPath: '/package/$id'
       preLoaderRoute: typeof AuthenticatedPackageIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/api/public/v1/packages': {
+      id: '/api/public/v1/packages'
+      path: '/api/public/v1/packages'
+      fullPath: '/api/public/v1/packages'
+      preLoaderRoute: typeof ApiPublicV1PackagesRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/public/cron/refresh-packages': {
       id: '/api/public/cron/refresh-packages'
@@ -126,11 +169,13 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedDeveloperRoute: typeof AuthenticatedDeveloperRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedPackageIdRoute: typeof AuthenticatedPackageIdRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedDeveloperRoute: AuthenticatedDeveloperRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedPackageIdRoute: AuthenticatedPackageIdRoute,
 }
@@ -142,6 +187,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   ApiPublicCronRefreshPackagesRoute: ApiPublicCronRefreshPackagesRoute,
+  ApiPublicV1PackagesRoute: ApiPublicV1PackagesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
