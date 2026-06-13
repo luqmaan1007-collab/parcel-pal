@@ -120,3 +120,16 @@
   60% { transform: scale(1.2); }
   100% { transform: scale(1); }
 }
+/* Force hide the Lovable brand components across Vercel production environments */
+#lovable-badge,
+[id*="lovable-badge"],
+iframe[src*="lovable.dev"],
+.lovable-badge-container,
+div[class*="lovable"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
