@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLang } from "@/lib/lang-context";
 import { PackageCard, PhoneFrame, LangSwitch, Bell, type PackageRow } from "@/components/package-ui";
-import { Plus, Home, User, Loader2, BellRing, LogOut, X, RefreshCw } from "lucide-react";
+import { Plus, Home, Loader2, BellRing, LogOut, X, RefreshCw, Code2 } from "lucide-react";
+import paketlyLogo from "@/assets/paketly-logo.png";
 import { addPackage, listPackages } from "@/lib/packages.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { enablePush, disablePush, getPushPermissionState, isPushSupported } from "@/lib/push-client";
@@ -38,9 +39,12 @@ function Index() {
     <PhoneFrame>
       <div className="relative px-6 pt-8 pb-20 text-primary-foreground" style={{ background: "var(--gradient-hero)" }}>
         <div className="flex items-center justify-between">
-          <div>
-            <div className="text-xs uppercase tracking-widest opacity-80">{t("appName")}</div>
-            <h1 className="text-2xl font-bold mt-1">{t("myPackages")}</h1>
+          <div className="flex items-center gap-3">
+            <img src={paketlyLogo} alt="Paketly" width={40} height={40} className="size-10 rounded-2xl bg-white/15 backdrop-blur p-1" />
+            <div>
+              <div className="text-xs uppercase tracking-widest opacity-80">{t("appName")}</div>
+              <h1 className="text-2xl font-bold mt-0.5">{t("myPackages")}</h1>
+            </div>
           </div>
           <div className="flex items-center gap-2">
             <LangSwitch />
@@ -118,7 +122,10 @@ function Index() {
 
       <div className="border-t border-border bg-card px-6 py-3 flex items-center justify-around">
         <NavItem icon={<Home className="size-5" />} label={t("home")} active />
-        <NavItem icon={<BellRing className="size-5" />} label={t("notifications")} />
+        <Link to="/developer" className="flex flex-col items-center gap-1 px-3 py-1 text-muted-foreground">
+          <Code2 className="size-5" />
+          <span className="text-[10px] font-medium">Developer</span>
+        </Link>
         <button onClick={signOut} className="flex flex-col items-center gap-1 px-3 py-1 text-muted-foreground">
           <LogOut className="size-5" />
           <span className="text-[10px] font-medium">{lang === "sv" ? "Logga ut" : "Sign out"}</span>
