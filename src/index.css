@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Target and hide the Lovable branding badge globally */
+#lovable-badge,
+[id*="lovable-badge"],
+iframe[src*="lovable.dev"],
+.lovable-badge-container {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
